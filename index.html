@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TrainerHRMS - Employee attendance, leave and EOD management dashboard." />
+  <title>TrainerHRMS Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">T</div>
+      <div>
+        <strong>TrainerHRMS</strong>
+        <span>Adroit Technologies</span>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-link active" data-section="dashboard">Dashboard</button>
+      <button class="nav-link" data-section="report">My Report</button>
+      <button class="nav-link" data-action="leave">Apply Leave</button>
+      <button class="nav-link" data-action="eod">EOD</button>
+    </nav>
+    <div class="profile">
+      <div class="avatar">TA</div>
+      <div class="profile-copy"><strong>Thavuth AJ</strong><span>Corporate Trainer</span></div>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">☼</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">EMPLOYEE DASHBOARD</p>
+        <h1>Welcome, Thavuth AJ!</h1>
+        <p class="hero-subtitle">Track your workday, sessions, leave and end-of-day reports in one place.</p>
+      </div>
+      <div class="date-card">
+        <span id="todayLabel">Today</span>
+        <strong id="todayDate">--</strong>
+      </div>
+    </section>
+
+    <section class="status-grid">
+      <button class="status-card selected" data-status="At Work"><span class="status-icon">▣</span><span>AT WORK</span></button>
+      <button class="status-card" data-status="Remote Work"><span class="status-icon">⌂</span><span>REMOTE WORK</span></button>
+      <button class="status-card" data-status="College Session"><span class="status-icon">▥</span><span>COLLEGE SESSION</span></button>
+      <button class="status-card" data-status="Travel"><span class="status-icon">▰</span><span>TRAVEL</span></button>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="card timer-card">
+        <div class="card-heading"><div><span class="section-kicker">WORK TIMER</span><h2 id="workStatus">At Work</h2></div><span class="live-dot">● LIVE</span></div>
+        <div class="timer" id="workTimer">00:00:00</div>
+        <div class="timer-actions">
+          <button class="primary-btn" id="checkInBtn">Check In</button>
+          <button class="secondary-btn" id="breakBtn">Start Break</button>
+        </div>
+        <div class="timer-meta"><span>Today's hours</span><strong id="hoursText">0.00 h</strong></div>
+      </article>
+
+      <article class="card summary-card">
+        <div class="card-heading"><div><span class="section-kicker">MONTHLY SUMMARY</span><h2>October 2026</h2></div></div>
+        <div class="summary-ring"><div><strong>22</strong><span>Working Days</span></div></div>
+        <div class="summary-stats">
+          <div><strong>18</strong><span>Present</span></div>
+          <div><strong>2</strong><span>Leave</span></div>
+          <div><strong>2</strong><span>WFH</span></div>
+        </div>
+      </article>
+
+      <article class="card notifications-card">
+        <div class="card-heading"><div><span class="section-kicker">NOTIFICATIONS</span><h2>Recent Updates</h2></div><button class="text-btn" id="clearNotifications">Clear</button></div>
+        <div id="notifications" class="notification-list">
+          <div class="notification"><span class="n-icon">✓</span><div><strong>Attendance marked</strong><p>Your workday is active.</p></div><small>Now</small></div>
+          <div class="notification"><span class="n-icon">i</span><div><strong>EOD reminder</strong><p>Submit your report before signing out.</p></div><small>Today</small></div>
+          <div class="notification"><span class="n-icon">!</span><div><strong>Upcoming session</strong><p>College training session scheduled.</p></div><small>Tomorrow</small></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="quick-grid">
+      <button class="quick-card" data-action="leave"><span>🏖️</span><div><strong>Apply Leave</strong><small>Submit a leave request</small></div><b>→</b></button>
+      <button class="quick-card" data-action="eod"><span>📝</span><div><strong>Submit EOD</strong><small>Record today's training work</small></div><b>→</b></button>
+      <button class="quick-card" data-section="report"><span>📊</span><div><strong>View Report</strong><small>Attendance and work hours</small></div><b>→</b></button>
+    </section>
+
+    <section class="report-panel card hidden" id="reportPanel">
+      <div class="card-heading"><div><span class="section-kicker">MY REPORT</span><h2>October Attendance</h2></div><button class="secondary-btn" id="exportBtn">Export CSV</button></div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Date</th><th>Mode</th><th>Check-in</th><th>Check-out</th><th>Hours</th><th>Status</th></tr></thead>
+        <tbody id="reportBody"></tbody></table>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="modal hidden" id="leaveModal">
+    <div class="modal-card">
+      <button class="close-btn" data-close="leaveModal">×</button>
+      <span class="section-kicker">LEAVE MANAGEMENT</span><h2>Apply Leave</h2>
+      <form id="leaveForm">
+        <label>Leave type<select required><option>Casual Leave</option><option>Sick Leave</option><option>Permission</option><option>Compensatory Leave</option></select></label>
+        <div class="two-col"><label>From<input type="date" required></label><label>To<input type="date" required></label></div>
+        <label>Reason<textarea required placeholder="Enter the reason..."></textarea></label>
+        <button class="primary-btn" type="submit">Submit Request</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="eodModal">
+    <div class="modal-card wide">
+      <button class="close-btn" data-close="eodModal">×</button>
+      <span class="section-kicker">END OF DAY</span><h2>Submit EOD Report</h2>
+      <form id="eodForm">
+        <div class="two-col"><label>Date<input id="eodDate" type="date" required></label><label>Session<select required><option>VTPT Training</option><option>FWD Training</option><option>College Session</option><option>Other</option></select></label></div>
+        <label>University / College<input required placeholder="Enter university or college"></label>
+        <label>Topics Covered<textarea required placeholder="HTML, React, OCI, Cloud Computing..."></textarea></label>
+        <label>Practical Activities<textarea required placeholder="Describe practicals, demos and student activities..."></textarea></label>
+        <div class="two-col"><label>Student Count<input type="number" min="0" placeholder="0"></label><label>Remarks<input placeholder="Additional remarks"></label></div>
+        <button class="primary-btn" type="submit">Submit EOD</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
