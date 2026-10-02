@@ -18,11 +18,11 @@
 <label>Password<input id="password" type="password" autocomplete="current-password" placeholder="Enter password" required></label>
 <button class="btn" type="submit">Sign In</button>
 </form>
-<div class="demo"><strong>Demo credentials</strong><br>Username: <strong>thavuth</strong><br>Password: <strong>Thavuth@123</strong></div>
+<div style="margin-top:18px;text-align:center;font-size:11px;color:#71838a">New user? <a href="register.html" style="color:#087f7c;font-weight:800;text-decoration:none">Create an account</a></div>
 <div class="footer">TrainerHRMS • Demo application</div>
 </div>
 <script>
 if(sessionStorage.getItem("trainerhrms_auth")==="true") location.replace("index.html");
-document.getElementById("loginForm").addEventListener("submit",function(e){e.preventDefault();const u=document.getElementById("username").value.trim(),p=document.getElementById("password").value;const ok=u==="thavuth"&&p==="Thavuth@123";if(ok){sessionStorage.setItem("trainerhrms_auth","true");location.replace("index.html")}else document.getElementById("error").style.display="block"});
+document.getElementById("loginForm").addEventListener("submit",function(e){e.preventDefault();const u=document.getElementById("username").value.trim(),p=document.getElementById("password").value;const users=JSON.parse(localStorage.getItem("trainerhrms_users")||"[]");const ok=users.some(x=>x.username===u&&x.password===p);if(ok){sessionStorage.setItem("trainerhrms_auth","true");sessionStorage.setItem("trainerhrms_user",u);location.replace("index.html")}else document.getElementById("error").style.display="block"});
 </script>
 </body></html>
