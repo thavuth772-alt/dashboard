@@ -14,15 +14,21 @@
 <div class="logo">T</div><div class="eyebrow">TRAINERHRMS</div><h1>Welcome back</h1><p class="sub">Sign in to access your employee dashboard, attendance, leave and EOD reports.</p>
 <div class="error" id="error">Invalid username or password.</div>
 <form id="loginForm">
-<label>Username<input id="username" autocomplete="username" placeholder="Enter username" required></label>
+<label>Email<input id="username" type="email" autocomplete="email" placeholder="Enter your email" required></label>
 <label>Password<input id="password" type="password" autocomplete="current-password" placeholder="Enter password" required></label>
 <button class="btn" type="submit">Sign In</button>
 </form>
 <div style="margin-top:18px;text-align:center;font-size:11px;color:#71838a">New user? <a href="register.html" style="color:#087f7c;font-weight:800;text-decoration:none">Create an account</a></div>
 <div class="footer">TrainerHRMS • Demo application</div>
 </div>
-<script>
-if(sessionStorage.getItem("trainerhrms_auth")==="true") location.replace("index.html");
-document.getElementById("loginForm").addEventListener("submit",function(e){e.preventDefault();const u=document.getElementById("username").value.trim(),p=document.getElementById("password").value;const users=JSON.parse(localStorage.getItem("trainerhrms_users")||"[]");const ok=users.some(x=>x.username===u&&x.password===p);if(ok){sessionStorage.setItem("trainerhrms_auth","true");sessionStorage.setItem("trainerhrms_user",u);location.replace("index.html")}else document.getElementById("error").style.display="block"});
-</script>
-</body></html>
+<script type="module">
+import { auth } from "./firebase-auth.js";
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+const form=document.getElementById("loginForm"), error=document.getElementById("error");
+form.addEventListener("submit",async e=>{
+ e.preventDefault(); error.style.display="none";
+ const email=document.getElementById("username").value.trim(), password=document.getElementById("password").value;
+ try { await signInWithEmailAndPassword(auth,email,password); location.replace("index.html"); }
+ catch(err){ error.textContent=err.code==="auth/invalid-credential"?"Invalid email or password.":err.message; error.style.display="block"; }
+});
+</script></body></html>
