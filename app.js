@@ -1,3 +1,4 @@
+const loggedUser=JSON.parse(localStorage.getItem('trainerhrms_users')||'[]').find(x=>x.username===sessionStorage.getItem('trainerhrms_user'));if(loggedUser){document.getElementById('welcomeTitle').textContent='Welcome, '+loggedUser.name+'!';}
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 let seconds=0, running=false, onBreak=false, timerId=null, currentStatus='At Work';
 
